@@ -1,20 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Diabetes model prediction</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
-            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
         }
         form {
-            background-color: #fff;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #f4f4f4;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        input[type="number"] {
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="submit"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -22,37 +31,44 @@
             border: 1px solid #ccc;
         }
         input[type="submit"] {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
             cursor: pointer;
         }
         input[type="submit"]:hover {
-            background-color: #555;
+            background-color: #45a049;
         }
-        h3 {
+        .result {
             margin-top: 20px;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 4px;
+            text-align: center;
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
-    <h2>Submit values for prediction</h2>
-    
-    <form action="/" method="post">
-        Blood glucose: <input type="number" step="any" name="glucose" required><br><br>
-        Insulin: <input type="number" step="any" name="insulin" required><br><br>
-        BMI: <input type="number" step="any" name="bmi" required><br><br>
-        Age: <input type="number" step="any" name="age" required><br><br>
-        <input type="submit" value="Predict">
+
+    <h1>Diabetes Prediction Form</h1>
+    <form method="POST">
+        <label for="Glucose">Glucose:</label>
+        <input type="text" id="Glucose" name="Glucose" required><br>
+
+        <label for="Insulin">Insulin:</label>
+        <input type="text" id="Insulin" name="Insulin" required><br>
+
+        <label for="BMI">BMI:</label>
+        <input type="text" id="BMI" name="BMI" required><br>
+
+        <label for="Age">Age:</label>
+        <input type="text" id="Age" name="Age" required><br>
+
+        <input type="submit" value="Submit">
     </form>
-    
-    {% if prediction != None %}
-        <h3>Prediction: {{ prediction }}</h3>
+
+    {% if prediction %}
+        <div class="result">
+            <h2>Prediction: {{ prediction }}</h2>
+        </div>
     {% endif %}
+
 </body>
 </html>

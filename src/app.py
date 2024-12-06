@@ -3,29 +3,43 @@ import pandas as pd
 from flask import Flask, request, render_template
 
 # Load the model
-model_file='../models/model.pkl'
+model_file = '../models/model.pkl'  # Adjust path if necessary
 
 with open(model_file, 'rb') as input_file:
-    model=pickle.load(input_file)
+    model = pickle.load(input_file)
 
 # Define the flask application
-app=Flask(__name__)
+app = Flask(__name__)
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    predicted_outcome = None  # Initialize the prediction variable
+
     if request.method == 'POST':
+        # Get the input data from the form (adjust form field names as needed)
+        try:
+            glucose = float(request.form['Glucose'])
+            insulin = float(request.form['Insulin'])
+            bmi = float(request.form['BMI'])
+            age = float(request.form['Age'])
+
+            # Format the input data as a pandas DataFrame (model expects 2D array-like)
+            input_data = pd.DataFrame([[glucose, insulin, bmi, age]], columns=['Glucose', 'Insulin', 'BMI', 'Age'])
+
+            # Make the prediction using the model
+            prediction = model.predict(input_data)
+
+            # Convert the model's numeric output to a human-readable result
+            if prediction[0] == 1:
+                predicted_outcome = 'Diabetic'
+            else:
+                predicted_outcome = 'Not Diabetic'
         
-        # Get the data from the form - take a look at the tutorial
-        # for a hint on how to do this. Also, if you are using the model
-        # supplied above, you need to send it four features: Glucose,
-        # Insulin, BMI and Age
+        except ValueError:
+            predicted_outcome = 'Invalid input, please enter numeric values only.'
 
-        # Next format the data for input into the model. For the model
-        # Supplied above, it should be a Pandas dataframe with four
-        # columns, one for each feature and one row.
-
-        # Then do the prediction and covert the class number that the
-        # model returns to a human readable string, like 'diabetic' etc.
-
-    # Return the result to flask
+    # Render the result page with the prediction
     return render_template('index.html', prediction=predicted_outcome)
+
+if __name__ == "__main__":
+    app.run(debug=True)
